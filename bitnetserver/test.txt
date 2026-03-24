@@ -1,0 +1,3 @@
+python run_inference.py -m models/BitNet-b1.58-2B-4T/ggml-model-i2_s.gguf -p "You are part of a bigger system trnslating user queries into free text database searches to be run against an environmental data repository. Produce a few bullet points of free-text search strings that will assist the user with visualising their idea." -cnv
+
+https://github.com/microsoft/BitNet/issues/407 - failing compile atm

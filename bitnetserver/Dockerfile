@@ -1,0 +1,15 @@
+FROM python:3.9.20-bookworm
+SHELL ["/bin/bash", "-c"]
+RUN mkdir /app
+WORKDIR /app
+RUN apt-get update
+RUN apt-get install -y build-essential cmake clang
+RUN git clone --recursive https://github.com/habaldwin01/bitnet.git
+WORKDIR /app/bitnet
+RUN pip install -r requirements.txt
+RUN huggingface-cli download microsoft/BitNet-b1.58-2B-4T-gguf --local-dir models/BitNet-b1.58-2B-4T
+RUN python setup_env.py -md models/BitNet-b1.58-2B-4T -q i2_s
+WORKDIR /app
+RUN mkdir -p temp
+ENTRYPOINT ["/app/bitnet/build/bin/llama-server", "--model", "/app/bitnet/models/BitNet-b1.58-2B-4T/ggml-model-i2_s.gguf", "--host", "0.0.0.0", "--port", "80", "--parallel", "8", "--ctx-size", "4096"]
+STOPSIGNAL SIGQUIT

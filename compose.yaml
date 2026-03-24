@@ -1,0 +1,33 @@
+services:
+  webapp:
+    image: erddaplm/webapp
+    container_name: erddaplm-webapp
+    depends_on:
+      - bitnetserver
+    entrypoint: ["gunicorn", "-w", "${GUNICORN_WORKERS}", "main:app", "-b", "0.0.0.0:8080"]
+    env_file:
+      - ./.env
+    ports:
+      - ${WEB_APP_EXTERNAL_PORT}:8080
+    networks:
+      - public
+      - private
+
+  bitnetserver:
+    image: erddaplm/bitnetserver
+    restart: on-failure
+    entrypoint: ["/app/bitnet/build/bin/llama-server", "--model", "/app/bitnet/models/BitNet-b1.58-2B-4T/ggml-model-i2_s.gguf", "--host", "0.0.0.0", "--port", "8185", "--parallel", "8", "--ctx-size", "4096"]
+    env_file:
+      - ./.env
+    networks:
+      - private
+
+networks:
+  public:
+    external: true
+    driver: bridge
+  private:
+    external: false
+
+volumes:
+  rabbitmq:
