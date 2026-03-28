@@ -4,13 +4,46 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        <title>ERDDAPLM - {% block title %}{% endblock %}</title>
+        <title>ERDDAPLM</title>
         <link href="/static/bootstrap.min.css" rel="stylesheet">
         <link href="/static/bootstrap-icons.min.css" rel="stylesheet">
         <link rel="manifest" href="/static/manifest.json" />
     </head>
     <body>
-        {% block content %}{% endblock %}
+        <div style="width:100%; height:30vh; display: inline-block;"></div>
+        <div class="container-lg my-5">
+            <div class="row">
+                <div class="col-lg-2">
+                </div>
+                <div class="col-lg-8 align-items-center text-center px-3">
+                    <!-- <h1>ERDDAPLM</h1> -->
+                    <img style="width: 120mm;" class="mb-1" src="/static/logo-128.png" aria-label="E.R.D.D.A.P.L.M. Logo" />
+                    <p class="fs-5">What do you want to see today?</p>
+                    <form action="query" method="POST">
+                        <div class="input-group mb-3 mt-3">
+                            <input type="text" class="form-control" placeholder="Show me Atlantic sea surface temperatures for the past 2 years" aria-label="Search query" aria-describedby="button-addon2" />
+                            <input type="submit" class="btn btn-primary" type="button" id="button-addon2" value="Find data" />
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-2">
+                </div>
+            </div>
+        </div>
+
+        <div style="position: fixed; bottom: 0; left: 0; right: 0; outline-style: solid; outline-offset: 1px; outline-color: var(--bs-border-color); outline-width: var(--bs-border-width);">
+            <div class="container-lg my-3">
+                <div class="row">
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-8 align-items-center text-center px-3">
+                        <span>Data sourced from <a href="https://erddap.bodc.ac.uk/erddap/">erddap.bodc.ac.uk</a>.</span>
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script src="/static/bootstrap.bundle.min.js"></script>
     </body>

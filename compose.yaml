@@ -15,8 +15,49 @@ services:
 
   bitnetserver:
     image: erddaplm/bitnetserver
+    container_name: erddaplm-bitnetserver
     restart: on-failure
     entrypoint: ["/app/bitnet/build/bin/llama-server", "--model", "/app/bitnet/models/BitNet-b1.58-2B-4T/ggml-model-i2_s.gguf", "--host", "0.0.0.0", "--port", "8185", "--parallel", "8", "--ctx-size", "4096"]
+    env_file:
+      - ./.env
+    networks:
+      - private
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: erddaplm-rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    ports:
+      - 5672:5672
+    env_file:
+      - ./.env
+    command: ["bash", "-c", "chmod 400 /var/lib/rabbitmq/.erlang.cookie; rabbitmq-server"]
+    networks:
+      - private
+
+  couchdb:
+    image: couchdb:3.5.1
+    container_name: erddaplm-couchdb
+    ports:
+      - 5984:5984
+    networks:
+      - private
+      - public
+    volumes:
+      - couchdb:/opt/couchdb/data
+      - ./config/couchdb:/opt/couchdb/etc/local.d
+
+  worker:
+    image: erddaplm/worker
+    container_name: erddaplm-worker
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    entrypoint: ["python3", "main.py"]
     env_file:
       - ./.env
     networks:
@@ -31,3 +72,4 @@ networks:
 
 volumes:
   rabbitmq:
+  couchdb:

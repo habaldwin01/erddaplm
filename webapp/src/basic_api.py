@@ -10,3 +10,7 @@ basic_api = Blueprint("basic_api", __name__)
 @basic_api.route("/status")
 def account_screen():
     return({"status": "ok"})
+
+@basic_api.route("/query")
+def query_screen():
+    return({"status": "ok"})
